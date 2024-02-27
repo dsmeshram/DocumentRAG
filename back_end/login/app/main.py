@@ -1,6 +1,5 @@
-from typing import Union
-
 from fastapi import FastAPI
+from pydantic import BaseModel
 
 app = FastAPI()
 
@@ -10,6 +9,17 @@ def read_root():
     return {"Hello": "World"}
 
 
-@app.get("/items/{item_id}")
-def read_item(item_id: int, q: Union[str, None] = None):
-    return {"item_id": item_id, "q": q}
+class UserCreate(BaseModel):
+    user_id: str
+    user_password: str
+
+
+@app.post("/login/")
+def login(login: UserCreate):
+    user_id = login.user_id
+    username = login.user_password
+    return {
+        "msg": "we got data succesfully",
+        "user_id": user_id,
+        "username": username,
+    }
